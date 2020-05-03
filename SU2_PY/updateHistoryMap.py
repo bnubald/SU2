@@ -37,7 +37,8 @@ fileList = ['CFlowOutput.cpp',
 'CAdjHeatOutput.cpp',
 'CAdjFlowIncOutput.cpp',
 'CAdjFlowCompOutput.cpp',
-'CAdjElasticityOutput.cpp']
+'CAdjElasticityOutput.cpp',
+'output_structure_legacy.cpp']
 
 fileList = [os.path.join(su2_home, 'SU2_CFD/src/output/' + i) for i in fileList]
 
