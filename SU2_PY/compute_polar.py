@@ -458,8 +458,8 @@ def main():
 
             if os.path.isdir(caseName):
                 command = 'cat '+caseName+\
-                          '/history_direct.dat DIRECT/history_direct.dat > tmp && mv tmp '+\
-                          'DIRECT/history_direct.dat'
+                          '/history_direct DIRECT/history_direct > tmp && mv tmp '+\
+                          'DIRECT/history_direct'
                 if options.verbose:
                     print(command)
                 os.system(command)
