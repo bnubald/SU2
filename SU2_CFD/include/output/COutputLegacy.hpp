@@ -143,7 +143,7 @@ class COutputLegacy {
         **TotalTotalEfficiency,
         **KineticEnergyLoss,
         **TRadius,
-        **TotalPressureLoss,
+        **TOTAL_PRESSURE_LOSS,
         **MassFlowIn,
         **MassFlowOut,
         **FlowAngleIn,

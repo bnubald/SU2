@@ -142,7 +142,7 @@ COutputLegacy::COutputLegacy(CConfig *config) {
     TotalTotalEfficiency          = new su2double*[nMarkerTurboPerf];
     KineticEnergyLoss             = new su2double*[nMarkerTurboPerf];
     TRadius                       = new su2double*[nMarkerTurboPerf];
-    TotalPressureLoss             = new su2double*[nMarkerTurboPerf];
+    TOTAL_PRESSURE_LOSS             = new su2double*[nMarkerTurboPerf];
     MassFlowIn                    = new su2double*[nMarkerTurboPerf];
     MassFlowOut                   = new su2double*[nMarkerTurboPerf];
     FlowAngleIn                   = new su2double*[nMarkerTurboPerf];
@@ -193,7 +193,7 @@ COutputLegacy::COutputLegacy(CConfig *config) {
       TotalTotalEfficiency    [iMarker] = new su2double [nSpanWiseSections + 1];
       KineticEnergyLoss       [iMarker] = new su2double [nSpanWiseSections + 1];
       TRadius                 [iMarker] = new su2double [nSpanWiseSections + 1];
-      TotalPressureLoss       [iMarker] = new su2double [nSpanWiseSections + 1];
+      TOTAL_PRESSURE_LOSS       [iMarker] = new su2double [nSpanWiseSections + 1];
       MassFlowIn              [iMarker] = new su2double [nSpanWiseSections + 1];
       MassFlowOut             [iMarker] = new su2double [nSpanWiseSections + 1];
       FlowAngleIn             [iMarker] = new su2double [nSpanWiseSections + 1];
@@ -245,7 +245,7 @@ COutputLegacy::COutputLegacy(CConfig *config) {
         TotalTotalEfficiency    [iMarker][iSpan] = 0.0;
         KineticEnergyLoss       [iMarker][iSpan] = 0.0;
         TRadius                 [iMarker][iSpan] = 0.0;
-        TotalPressureLoss       [iMarker][iSpan] = 0.0;
+        TOTAL_PRESSURE_LOSS       [iMarker][iSpan] = 0.0;
         MassFlowIn              [iMarker][iSpan] = 0.0;
         MassFlowOut             [iMarker][iSpan] = 0.0;
         FlowAngleIn             [iMarker][iSpan] = 0.0;
@@ -330,7 +330,7 @@ COutputLegacy::~COutputLegacy(void) {
       delete [] TotalTotalEfficiency [iMarker];
       delete [] KineticEnergyLoss    [iMarker];
       delete [] TRadius              [iMarker];
-      delete [] TotalPressureLoss    [iMarker];
+      delete [] TOTAL_PRESSURE_LOSS    [iMarker];
       delete [] MassFlowIn           [iMarker];
       delete [] MassFlowOut          [iMarker];
       delete [] FlowAngleIn          [iMarker];
@@ -382,7 +382,7 @@ COutputLegacy::~COutputLegacy(void) {
     delete [] TotalTotalEfficiency;
     delete [] KineticEnergyLoss;
     delete [] TRadius;
-    delete [] TotalPressureLoss;
+    delete [] TOTAL_PRESSURE_LOSS;
     delete [] MassFlowIn;
     delete [] MassFlowOut;
     delete [] FlowAngleIn;
@@ -4346,7 +4346,7 @@ void COutputLegacy::SetConvHistory_Header(ofstream *ConvHist_file, CConfig *conf
   char d_flow_coeff[] = ",\"D(CL)\",\"D(CD)\",\"D(CSF)\",\"D(CMx)\",\"D(CMy)\",\"D(CMz)\",\"D(CFx)\",\"D(CFy)\",\"D(CFz)\",\"D(CL/CD)\",\"D(Custom_ObjFunc)\"";
   char d_thermal_coeff[] = ",\"D(HeatFlux_Total)\",\"D(HeatFlux_Maximum)\"";
   char d_engine[] = ",\"D(NetThrust)\",\"D(Power)\",\"D(AeroCDrag)\",\"D(SolidCDrag)\",\"D(Radial_Distortion)\",\"D(Circumferential_Distortion)\"";
-  char d_turbo_coeff[] = ",\"D(TotalPressureLoss_0)\",\"D(FlowAngleOut_0)\",\"D(TotalEfficency)\",\"D(TotalStaticEfficiency)\", \"D(EntropyGen)\"";
+  char d_turbo_coeff[] = ",\"D(TOTAL_PRESSURE_LOSS_0)\",\"D(FlowAngleOut_0)\",\"D(TotalEfficency)\",\"D(TotalStaticEfficiency)\", \"D(EntropyGen)\"";
   char d_surface_outputs[]= ",\"D(Uniformity)\",\"D(Secondary_Strength)\",\"D(Momentum_Distortion)\",\"D(Secondary_Over_Uniformity)\",\"D(Pressure_Drop)\"";
 
   /*--- Find the markers being monitored and create a header for them ---*/
@@ -4374,7 +4374,7 @@ void COutputLegacy::SetConvHistory_Header(ofstream *ConvHist_file, CConfig *conf
       stringstream tag;
       tag << iMarker_Monitoring + 1;
 
-      turbo_coeff += ",\"TotalPressureLoss_" + tag.str() + "\"";
+      turbo_coeff += ",\"TOTAL_PRESSURE_LOSS_" + tag.str() + "\"";
       turbo_coeff += ",\"KineticEnergyLoss_" + tag.str() + "\"";
       turbo_coeff += ",\"EntropyGen_" + tag.str() + "\"";
       turbo_coeff += ",\"EulerianWork_" + tag.str() + "\"";
@@ -4966,7 +4966,7 @@ void COutputLegacy::SetConvHistory_Body(ofstream *ConvHist_file,
           for (iMarker_Monitoring = 0; iMarker_Monitoring < nTurboPerf; iMarker_Monitoring++) {
             for(iSpan=0; iSpan<nSpanWiseSections+1; iSpan++){
               if ((iMarker_Monitoring == 0) && (direct_diff != NO_DERIVATIVE)){
-                D_TotalPressure_Loss = SU2_TYPE::GetDerivative(TotalPressureLoss[iMarker_Monitoring][iSpan]);
+                D_TotalPressure_Loss = SU2_TYPE::GetDerivative(TOTAL_PRESSURE_LOSS[iMarker_Monitoring][iSpan]);
                 D_FlowAngle_Out      = 180.0/PI_NUMBER*SU2_TYPE::GetDerivative(FlowAngleOut[iMarker_Monitoring][iSpan]);
               }
             }
@@ -5314,9 +5314,9 @@ void COutputLegacy::SetConvHistory_Body(ofstream *ConvHist_file,
             if (turbo){
               for (iMarker_Monitoring = 0; iMarker_Monitoring < config[ZONE_0]->GetnMarker_TurboPerformance(); iMarker_Monitoring++){
                 if (iMarker_Monitoring == 0){
-                  SPRINTF(turbo_coeff, ", %12.10f", TotalPressureLoss[iMarker_Monitoring][nSpanWiseSections]);
+                  SPRINTF(turbo_coeff, ", %12.10f", TOTAL_PRESSURE_LOSS[iMarker_Monitoring][nSpanWiseSections]);
                 }else{
-                  SPRINTF(surface_coeff, ", %12.10f", TotalPressureLoss[iMarker_Monitoring][nSpanWiseSections]);
+                  SPRINTF(surface_coeff, ", %12.10f", TOTAL_PRESSURE_LOSS[iMarker_Monitoring][nSpanWiseSections]);
                   strcat(turbo_coeff, surface_coeff);
                 }
                 SPRINTF(surface_coeff, ", %12.10f", KineticEnergyLoss[iMarker_Monitoring][nSpanWiseSections]);
@@ -6002,7 +6002,7 @@ void COutputLegacy::SetConvHistory_Body(ofstream *ConvHist_file,
                 cout.setf(ios::scientific, ios::floatfield);
 
                 if (nZone < 2) {
-                  cout.width(15); cout << TotalPressureLoss[0][nSpanWiseSections]*100.0;
+                  cout.width(15); cout << TOTAL_PRESSURE_LOSS[0][nSpanWiseSections]*100.0;
                   cout.width(15); cout << EntropyGen[0][nSpanWiseSections]*100.0;
                 }
                 else {
@@ -6101,7 +6101,7 @@ void COutputLegacy::SetConvHistory_Body(ofstream *ConvHist_file,
                 cout.setf(ios::scientific, ios::floatfield);
                 if (nZone < 2){
                   /*--- single zone output ---*/
-                  cout.width(15); cout << TotalPressureLoss[0][nSpanWiseSections]*100.0;
+                  cout.width(15); cout << TOTAL_PRESSURE_LOSS[0][nSpanWiseSections]*100.0;
                   cout.width(15); cout << EntropyGen[0][nSpanWiseSections]*100.0;
                 }
                 else{
@@ -11347,7 +11347,7 @@ void COutputLegacy::WriteTurboPerfConvHistory(CConfig *config){
     cout << "Blade performance between boundaries " << inMarker_Tag << " and "<< outMarker_Tag << " : "<<endl;
     cout << endl;
     cout << "     Total Pressure Loss(%)" << "   Kinetic Energy Loss(%)" << "      Entropy Generation(%)" << endl;
-    cout.width(25); cout << TotalPressureLoss[iMarker_Monitoring][config->GetnSpan_iZones(iMarker_Monitoring)]*100.0;
+    cout.width(25); cout << TOTAL_PRESSURE_LOSS[iMarker_Monitoring][config->GetnSpan_iZones(iMarker_Monitoring)]*100.0;
     cout.width(25); cout << KineticEnergyLoss[iMarker_Monitoring][config->GetnSpan_iZones(iMarker_Monitoring)]*100.0;
     cout.width(25); cout << EntropyGen[iMarker_Monitoring][config->GetnSpan_iZones(iMarker_Monitoring)]*100.0;
     cout << endl;
