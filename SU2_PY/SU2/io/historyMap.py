@@ -1301,4 +1301,8 @@ history_header_map = {'ADJOINT_DISP_X': {'DESCRIPTION': 'Root-mean square residu
  'VMS': {'DESCRIPTION': 'VMS',
          'GROUP': '',
          'HEADER': 'VonMises',
+         'TYPE': 'DEFAULT'}
+  'TOTAL_PRESSURE_LOSS': {'DESCRIPTION': 'TotalPressureLoss',
+         'GROUP': '',
+         'HEADER': 'TOTAL_PRESSURE_LOSS',
          'TYPE': 'DEFAULT'}}
