@@ -38,6 +38,7 @@
 #include "../../include/output/CAdjFlowIncOutput.hpp"
 #include "../../include/output/CHeatOutput.hpp"
 #include "../../include/output/CAdjHeatOutput.hpp"
+#include "../../include/output/CTurbomachineryOutput.hpp"
 
 COutput* COutputFactory::createOutput(ENUM_MAIN_SOLVER kindSolver, CConfig* config, int nDim){
 
@@ -46,6 +47,9 @@ COutput* COutputFactory::createOutput(ENUM_MAIN_SOLVER kindSolver, CConfig* conf
   switch(kindSolver){
     case EULER: case NAVIER_STOKES: case RANS:
       output = new CFlowCompOutput(config, nDim);
+      if(config->GetBoolTurbomachinery()){
+        output = new CTurbomachineryOutput(config, nDim);
+        }
       break;
     case INC_EULER: case INC_NAVIER_STOKES: case INC_RANS:
       output = new CFlowIncOutput(config, nDim);
